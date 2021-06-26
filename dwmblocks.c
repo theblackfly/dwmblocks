@@ -51,13 +51,13 @@ void remove_all(char *str, char to_remove) {
 	char *read = str;
 	char *write = str;
 	while (*read) {
-		if (*read == to_remove) {
-			read++;
+		if (*read != to_remove) {
 			*write = *read;
+			++write;
 		}
-		read++;
-		write++;
+		++read;
 	}
+	*write = '\0';
 }
 
 //opens process *cmd and stores output in *output
@@ -111,6 +111,10 @@ void getsigcmds(int signal)
 void setupsignals()
 {
 	struct sigaction sa;
+
+	for(int i = SIGRTMIN; i <= SIGRTMAX; i++)
+		signal(i, SIG_IGN);
+
 	for(int i = 0; i < LENGTH(blocks); i++)
 	{
 		if (blocks[i].signal > 0)
